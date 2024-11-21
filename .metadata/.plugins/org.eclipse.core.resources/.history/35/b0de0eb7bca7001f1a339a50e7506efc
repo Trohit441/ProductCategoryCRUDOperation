@@ -1,0 +1,49 @@
+package com.demo.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.demo.beans.Category;
+import com.demo.beans.Product;
+import com.demo.dao.CategoryDao;
+import com.demo.dao.ProductDao;
+
+@Service
+public class ProductService {
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    public Page<Product> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    public Product getProductById(Long id) {
+        return productRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+    }
+
+    public Product createProduct(Product product, Long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        product.setCategory(category);
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(Long id, Product productDetails) {
+        Product product = getProductById(id);
+        product.setName(productDetails.getName());
+        product.setPrice(productDetails.getPrice());
+        return productRepository.save(product);
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
+    }
+}
+
+

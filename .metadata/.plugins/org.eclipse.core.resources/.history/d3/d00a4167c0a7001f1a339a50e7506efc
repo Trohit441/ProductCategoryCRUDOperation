@@ -1,0 +1,42 @@
+package com.demo.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Service;
+
+import com.demo.beans.Category;
+import com.demo.dao.CategoryDao;
+
+@Service
+public class CategoryService {
+    @Autowired
+    private CategoryDao categoryDao;
+
+    public Page<Category> getAllCategories(Pageable pageable) {
+        return categoryDao.findAll(pageable);
+    }
+
+    public Category getCategoryById(Long id) {
+        return categoryDao.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+    }
+
+    public Category createCategory(Category category) {
+        return categoryDao.save(category);
+    }
+
+    public Category updateCategory(Long id, Category categoryDetails) {
+        Category category = getCategoryById(id);
+        category.setName(categoryDetails.getName());
+        return categoryDao.save(category);
+    }
+
+    public void deleteCategory(Long id) {
+    	categoryDao.deleteById(id);
+    }
+}
+
+

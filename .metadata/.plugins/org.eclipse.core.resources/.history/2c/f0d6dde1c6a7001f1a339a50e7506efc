@@ -1,0 +1,46 @@
+package com.demo.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import com.demo.beans.Category;
+import com.demo.dao.CategoryDao;
+
+@Service
+public class CategoryServiceImpl implements CategoryService {
+
+    @Autowired
+    private CategoryDao categoryRepository;
+
+    @Override
+    public Page<Category> getAllCategories(Pageable pageable) {
+        return categoryRepository.findAll(pageable);
+    }
+
+    @Override
+    public Category getCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+    }
+
+    @Override
+    public Category createCategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category updateCategory(Long id, Category updatedCategory) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        category.setName(updatedCategory.getName());
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public void deleteCategory(Long id) {
+        categoryRepository.deleteById(id);
+    }
+}
+

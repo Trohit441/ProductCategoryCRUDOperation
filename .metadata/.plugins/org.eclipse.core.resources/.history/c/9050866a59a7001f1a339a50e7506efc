@@ -1,0 +1,29 @@
+package com.demo.service;
+
+@Service
+public class ProductService {
+    @Autowired
+    private ProductDao pDao;
+    @Autowired
+    private CategoryDao categoryDao;
+
+    public List<Product> getAllProducts() {
+        return pDao.findAll();
+    }
+
+    public Product getProductById(Long id) {
+        return pDao.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
+    }
+
+    public Product saveProduct(Product product, Long categoryId) {
+        Category category = categoryDao.findById(categoryId)
+            .orElseThrow(() -> new RuntimeException("Category not found"));
+        product.setCategory(category);
+        return pDao.save(product);
+    }
+
+    public void deleteProduct(Long id) {
+    	pDao.deleteById(id);
+    }
+}
+

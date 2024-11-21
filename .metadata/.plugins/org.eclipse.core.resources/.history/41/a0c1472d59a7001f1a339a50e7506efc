@@ -1,0 +1,24 @@
+package com.demo.service;
+
+@Service
+public class CategoryService {
+    @Autowired
+    private CategoryDao repo;
+
+    public List<Category> getAllCategories() {
+        return repo.findAll();
+    }
+
+    public Category getCategoryById(Long id) {
+        return repo.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+    }
+
+    public Category saveCategory(Category category) {
+        return repo.save(category);
+    }
+
+    public void deleteCategory(Long id) {
+        repo.deleteById(id);
+    }
+}
+

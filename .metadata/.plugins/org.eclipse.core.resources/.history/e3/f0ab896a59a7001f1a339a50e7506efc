@@ -1,0 +1,24 @@
+package com.demo.service;
+
+@Service
+public class CategoryService {
+    @Autowired
+    private CategoryDao cDao;
+
+    public List<Category> getAllCategories() {
+        return cDao.findAll();
+    }
+
+    public Category getCategoryById(Long id) {
+        return cDao.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+    }
+
+    public Category saveCategory(Category category) {
+        return cDao.save(category);
+    }
+
+    public void deleteCategory(Long id) {
+    	cDao.deleteById(id);
+    }
+}
+
